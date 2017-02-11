@@ -1,8 +1,8 @@
 {
-  "name": "scroll-detect",
+  "name": "scroll-swipe",
   "version": "0.0.1",
   "description": "lightweight vanilla JS library for detecting scroll and touch events based on custom sensitivity",
-  "main": "./dist/scrollDetect.js",
+  "main": "./dist/ScrollSwipe.js",
   "eslintConfig": "./.eslint.json",
   "scripts": {
     "start": "webpack-dev-server",
@@ -12,10 +12,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/cmswalker/scroll-detect.git"
+    "url": "git+https://github.com/cmswalker/scroll-swipe.git"
   },
   "bugs": {
-    "url": "https://github.com/cmswalker/scroll-detect"
+    "url": "https://github.com/cmswalker/scroll-swipe"
   },
   "author": "cmswalker",
   "license": "MIT",
@@ -28,10 +28,14 @@
   "keywords": [
     "scroll",
     "detect",
+    "direction",
     "scroll-event",
     "dom-scroll",
     "scroll-detect",
-    "detect-scroll"
+    "detect-scroll",
+    "scroll-direction",
+    "scroll-swipe",
+    "swipe"
   ],
   "devDependencies": {
     "babel-cli": "^6.5.2",

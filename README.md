@@ -19,7 +19,7 @@ npm start => localhost:3333
 
 ###Instantiate
 ```
-var sd = new ScrollSwipe({
+var ss = new ScrollSwipe({
 	target: document, // Element must be a single dom-node per ScrollSwipe Instance
 	scrollSensitivity: 0, // The lower the number, the more sensitive
 	touchSensitivity: 0, // The lower the number, the more senitive
@@ -39,7 +39,7 @@ function scrollCb(scrollPending, direction, intent) {
 	// intent will be either 0 or 1 - based on the x,y intent the user scroll/touched the dom.  0 indicates left/up : 1 indicates right/down
 	
 	//do animations, state changes/eval or something async, then open the listener back up.
-	sd.listen();
+	ss.listen();
 }
 
 funciton touchCb(scrollPending, direction) {

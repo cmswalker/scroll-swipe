@@ -1,6 +1,6 @@
 var ScrollSwipe = require('../lib/ScrollSwipe'); //or just use the global window.ScrollDirect if using this on the client;
 
-var sd = new ScrollSwipe({
+var ss = new ScrollSwipe({
 	target: document, // can be a div, or anything else you want to track scroll/touch events on
 	scrollSensitivity: 0, // the lower the number, the more sensitive
 	touchSensitivity: 0, // the lower the number, the more senitive
@@ -22,17 +22,17 @@ var intentMap = {
 function scrollCb(scrollPending, direction, intent) {	
 	console.log('trigged scroll to direction: ', direction);
 	console.log('with an intent of going: ', intentMap[direction][intent]);
-	console.log('based on a senstivity level of ', sd.scrollSensitivity);
+	console.log('based on a senstivity level of ', ss.scrollSensitivity);
 
 	//perform actions such as animations/transitions or just plain funciton calls, then set the scrollPending back to false to listen for the next event
-	sd.listen();
+	ss.listen();
 }
 
 function touchCb(scrollPending, direction, intent) {	
 	console.log('trigged touch to direction: ', direction);
 	console.log('with an intent of going: ', intentMap[direction][intent]);
-	console.log('based on a senstivity level of ', sd.touchSensitivity);
+	console.log('based on a senstivity level of ', ss.touchSensitivity);
 
 	//perform actions such as animations/transitions or just plain funciton calls, then set the scrollPending back to false to listen for the next event
-	sd.listen();
+	ss.listen();
 }

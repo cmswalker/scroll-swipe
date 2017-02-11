@@ -1,11 +1,12 @@
 #scroll-detect :mouse2:
 
-####[View on NPM](https://www.npmjs.com/package/fullpage-react)
+####[View on NPM](https://www.npmjs.com/package/scroll-detect)
 ```
 npm install scroll-detect
 ```
 
 ###easy-peasy 2-step API for providing scroll and touch event direction handlers
+
 #####UMD-wrapped for use with node/browser and with or without bundlers
 
 ####Example setup can be found [here](https://github.com/cmswalker/scroll-detect/blob/master/examples/index.js)

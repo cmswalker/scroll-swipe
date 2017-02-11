@@ -1,6 +1,6 @@
 #scroll-swipe :mouse2:
 
-####[View on NPM](https://www.npmjs.com/package/scroll-swipe)
+####[NPM](https://www.npmjs.com/package/scroll-swipe)
 ```
 npm install scroll-swipe
 ```

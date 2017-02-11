@@ -12,10 +12,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/cmswalker/scroll-detect.git",
+    "url": "git+https://github.com/cmswalker/scroll-detect.git"
   },
   "bugs": {
-    "url": "https://github.com/cmswalker/scroll-detect",
+    "url": "https://github.com/cmswalker/scroll-detect"
   },
   "author": "cmswalker",
   "license": "MIT",

@@ -10,12 +10,18 @@
     "babel-version": "babel --version",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cmswalker/scroll-detect.git",
+  },
+  "bugs": {
+    "url": "https://github.com/cmswalker/scroll-detect",
+  },
   "author": "cmswalker",
   "license": "MIT",
   "repository": {
     "type": "git"
-  },
-  "bugs": {},
+  },  
   "engines": {
     "node": ">=4.4.3"
   },

@@ -1,8 +1,8 @@
-#scroll-detect :mouse2:
+#scroll-swipe :mouse2:
 
-####[View on NPM](https://www.npmjs.com/package/scroll-detect)
+####[View on NPM](https://www.npmjs.com/package/scroll-swipe)
 ```
-npm install scroll-detect
+npm install scroll-swipe
 ```
 
 ###easy-peasy 2-step API for providing scroll and touch event direction handlers
@@ -19,8 +19,8 @@ npm start => localhost:3333
 
 ###Instantiate
 ```
-var sd = new ScrollDetect({
-	target: document, // Element must be a single dom-node per ScrollDetect Instance
+var sd = new ScrollSwipe({
+	target: document, // Element must be a single dom-node per ScrollSwipe Instance
 	scrollSensitivity: 0, // The lower the number, the more sensitive
 	touchSensitivity: 0, // The lower the number, the more senitive
 	scrollCb: scrollCb,  // The action you wish to perform when a scroll reacts (details below)
@@ -30,15 +30,16 @@ var sd = new ScrollDetect({
 
 ###Scroll API && Touch API
 ```
-// The callbacks for the ScrollDetect instance above ^^
+// The callbacks for the ScrollSwipe instance above ^^
 
-function scrollCb(scrollPending, direction) {
+function scrollCb(scrollPending, direction, intent) {
 	// scrollPending will always be true at this point, it is included in the callback arguments to help remind you to set it back to false when performing actions such as async, animations/transitions or just plain function calls;
 	
 	// direction will either be 'VERTICAL' or 'HORIZONTAL' depending on the user-interaction
+	// intent will be either 0 or 1 - based on the x,y intent the user scroll/touched the dom.  0 indicates left/up : 1 indicates right/down
 	
 	//do animations, state changes/eval or something async, then open the listener back up.
-	sd.scrollPending = false;
+	sd.listen();
 }
 
 funciton touchCb(scrollPending, direction) {

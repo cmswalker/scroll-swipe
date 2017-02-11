@@ -1,0 +1,43 @@
+{
+  "name": "scroll-detect",
+  "version": "0.0.1",
+  "description": "lightweight vanilla JS library for detecting scroll and touch events based on custom sensitivity",
+  "main": "./dist/scrollDetect.js",
+  "eslintConfig": "./.eslint.json",
+  "scripts": {
+    "start": "webpack-dev-server",
+    "build": "babel lib -d dist && node build.js",
+    "babel-version": "babel --version",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "cmswalker",
+  "license": "MIT",
+  "repository": {
+    "type": "git"
+  },
+  "bugs": {},
+  "engines": {
+    "node": ">=4.4.3"
+  },
+  "keywords": [
+    "scroll",
+    "detect",
+    "scroll-event",
+    "dom-scroll",
+    "scroll-detect",
+    "detect-scroll"
+  ],
+  "devDependencies": {
+    "babel-cli": "^6.5.2",
+    "babel-core": "^6.18.2",
+    "babel-eslint": "^7.1.0",
+    "babel-loader": "^6.2.4",
+    "babel-preset-es2015": "^6.9.0",
+    "babel-preset-react": "^6.16.0",
+    "eslint": "^3.10.0",
+    "gulp": "^3.9.1",
+    "gulp-umd": "^0.2.0",
+    "webpack": "1.12.2",
+    "webpack-dev-server": "^1.16.2"
+  }
+}

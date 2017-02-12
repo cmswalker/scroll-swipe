@@ -3,9 +3,11 @@ var ScrollSwipe = require('../lib/ScrollSwipe'); //or just use the global window
 var ss = new ScrollSwipe({
 	target: document, // can be a div, or anything else you want to track scroll/touch events on
 	scrollSensitivity: 0, // the lower the number, the more sensitive
-	touchSensitivity: 0, // the lower the number, the more senitive
+	touchSensitivity: 0, // the lower the number, the more senitive,
+	scrollPreventDefault: true, // prevent default option for scroll events
+	touchPreventDefault: true, // prevent default option for touch events
 	scrollCb: scrollCb,
-	touchCb: touchCb	
+	touchCb: touchCb
 });
 
 var intentMap = {
@@ -19,19 +21,25 @@ var intentMap = {
 	}
 };
 
-function scrollCb(scrollPending, direction, intent) {	
-	console.log('trigged scroll to direction: ', direction);
-	console.log('with an intent of going: ', intentMap[direction][intent]);
-	console.log('based on a senstivity level of ', ss.scrollSensitivity);
+/**
+ * @param  {Object} data - returns the following
+ * startEvent - Event that triggered this action
+ * lastEvent - Last Event at the end of action
+ * scrollPending - state of instance's scrollPending property (will always come back true after a successful event)
+ * direction - 'VERTICAL' || 'HORIZONTAL' for mapping vertical/horizontal actions from the event;
+ * intent - 0 || 1  for mapping up/down && left/right actions from the event
+ */
+function scrollCb(data) {
+	console.log('scroll data', data);
+	console.log('the user scrolled ', data.direction);
+	console.log('with an intent of ', intentMap[data.direction][data.intent]);
 
 	//perform actions such as animations/transitions or just plain funciton calls, then set the scrollPending back to false to listen for the next event
 	ss.listen();
 }
 
-function touchCb(scrollPending, direction, intent) {	
-	console.log('trigged touch to direction: ', direction);
-	console.log('with an intent of going: ', intentMap[direction][intent]);
-	console.log('based on a senstivity level of ', ss.touchSensitivity);
+function touchCb(data) {
+	console.log('touch data', data);
 
 	//perform actions such as animations/transitions or just plain funciton calls, then set the scrollPending back to false to listen for the next event
 	ss.listen();

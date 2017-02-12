@@ -23,6 +23,8 @@ var ss = new ScrollSwipe({
 	target: document, // Element must be a single dom-node per ScrollSwipe Instance
 	scrollSensitivity: 0, // The lower the number, the more sensitive
 	touchSensitivity: 0, // The lower the number, the more senitive
+	scrollPreventDefault: true, // prevent default option for scroll events
+	touchPreventDefault: true, // prevent default option for touch events
 	scrollCb: scrollCb,  // The action you wish to perform when a scroll reacts (details below)
 	touchCb: touchCb // The action you wish to perform when a touch reacts (details below)
 });
@@ -30,20 +32,28 @@ var ss = new ScrollSwipe({
 
 ###Scroll API && Touch API
 ```
-// The callbacks for the ScrollSwipe instance above ^^
+// Example callbacks for the ScrollSwipe instance above ^^
 
-function scrollCb(scrollPending, direction, intent) {
-	// scrollPending will always be true at this point, it is included in the callback arguments to help remind you to set it back to false when performing actions such as async, animations/transitions or just plain function calls;
-	
-	// direction will either be 'VERTICAL' or 'HORIZONTAL' depending on the user-interaction
-	// intent will be either 0 or 1 - based on the x,y intent the user scroll/touched the dom.  0 indicates left/up : 1 indicates right/down
-	
+/**
+ * @param  {Object} data - returns the following
+ * startEvent - Event that triggered this action
+ * lastEvent - Last Event at the end of action
+ * scrollPending - state of instance's scrollPending property (will always come back true after a successful event)
+ * direction - 'VERTICAL' || 'HORIZONTAL' for mapping vertical/horizontal actions from the event;
+ * intent - 0 || 1  for mapping up/down && left/right actions from the event
+ */
+function scrollCb(data) {
 	//do animations, state changes/eval or something async, then open the listener back up.
 	ss.listen();
 }
 
-funciton touchCb(scrollPending, direction) {
+function touchCb(data) {
   //the exact same behavior as scrollCb ^^ applies
+	ss.listen();
 }
+
+//kill scroll event listeners for an instance with ss.killScroll();
+//kill touch event listeners for an instance with ss.killTouch();
+//kill all event listeners for an instance with ss.killAll();
 
 ```

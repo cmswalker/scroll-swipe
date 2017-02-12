@@ -9,10 +9,10 @@
   "parserOptions": {
       "ecmaVersion": 6,
       "ecmaFeatures": {
-          "experimentalObjectRestSpread": true,          
+          "experimentalObjectRestSpread": true
       },
       "sourceType": "module"
-  },  
+  },
   "globals": {
 
   },

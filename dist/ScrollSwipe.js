@@ -7,12 +7,10 @@
     root.ScrollSwipe = factory();
   }
 }(this, function() {
-'use strict';
+const VERTICAL = 'VERTICAL';
+const HORIZONTAL = 'HORIZONTAL';
 
-var VERTICAL = 'VERTICAL';
-var HORIZONTAL = 'HORIZONTAL';
-
-var noOp = function noOp() {};
+const noOp = () => {};
 
 var acceptedParams = {
   target: true,
@@ -29,15 +27,13 @@ if (typeof module !== 'undefined') {
 }
 
 function ScrollSwipe(opts) {
-  var _this = this;
-
-  Object.keys(opts).forEach(function (key) {
+  Object.keys(opts).forEach(key => {
     if (acceptedParams[key]) {
-      _this[key] = opts[key];
+      this[key] = opts[key];
       return;
     }
 
-    throw new Error('unknown options for ScrollSwipe: ' + key);
+    throw new Error(`unknown options for ScrollSwipe: ${key}`);
   });
 
   if (!opts.target) {
@@ -83,6 +79,7 @@ function ScrollSwipe(opts) {
 }
 
 ScrollSwipe.prototype.listen = function listen() {
+  this.flush();
   this.scrollPending = false;
   return this;
 };
@@ -104,41 +101,39 @@ ScrollSwipe.prototype.killAll = function teardown() {
 };
 
 ScrollSwipe.prototype.initScroll = function initScroll() {
-  var _this2 = this;
-
-  this.target.addEventListener('wheel', function (e) {
-    if (_this2.scrollPreventDefault) {
+  this.target.addEventListener('wheel', e => {
+    if (this.scrollPreventDefault) {
       e.preventDefault();
     }
 
-    if (_this2.scrollPending) {
+    if (this.scrollPending) {
       return;
     }
 
-    _this2.startScrollEvent = e;
+    this.startScrollEvent = e;
 
     var x = e.deltaX;
     var y = e.deltaY;
 
-    _this2.addXScroll(x);
-    _this2.addYScroll(y);
+    this.addXScroll(x);
+    this.addYScroll(y);
 
-    _this2.scrollFulfilled(function (fulfilled, direction, intent) {
+    this.scrollFulfilled((fulfilled, direction, intent) => {
       if (!fulfilled) {
         return;
       }
 
-      _this2.latestScrollEvent = e;
+      this.latestScrollEvent = e;
 
       var result = {
         startEvent: e,
-        lastEvent: _this2.latestScrollEvent,
-        scrollPending: _this2.scrollPending,
-        direction: direction,
-        intent: intent
+        lastEvent: this.latestScrollEvent,
+        scrollPending: this.scrollPending,
+        direction,
+        intent
       };
 
-      _this2.scrollCb(result);
+      this.scrollCb(result);
     });
   });
 
@@ -146,11 +141,9 @@ ScrollSwipe.prototype.initScroll = function initScroll() {
 };
 
 ScrollSwipe.prototype.initTouch = function initTouch() {
-  var _this3 = this;
+  this.target.addEventListener('touchmove', e => {
 
-  this.target.addEventListener('touchmove', function (e) {
-
-    if (_this3.touchPreventDefault) {
+    if (this.touchPreventDefault) {
       e.preventDefault();
     }
 
@@ -158,30 +151,30 @@ ScrollSwipe.prototype.initTouch = function initTouch() {
     var x = changedTouches.clientX;
     var y = changedTouches.clientY;
 
-    _this3.startTouchEvent = e;
-    _this3.addXTouch(x);
-    _this3.addYTouch(y);
+    this.startTouchEvent = e;
+    this.addXTouch(x);
+    this.addYTouch(y);
   });
 
-  this.target.addEventListener('touchend', function (e) {
-    if (_this3.touchPreventDefault) {
+  this.target.addEventListener('touchend', e => {
+    if (this.touchPreventDefault) {
       e.preventDefault();
     }
 
-    _this3.touchFulfilled(e, function (fulfilled, direction, intent) {
+    this.touchFulfilled(e, (fulfilled, direction, intent) => {
       if (!fulfilled) {
         return;
       }
 
       var result = {
-        startEvent: _this3.startTouchEvent,
-        lastEvent: _this3.latestTouchEvent,
-        scrollPending: _this3.scrollPending,
-        direction: direction,
-        intent: intent
+        startEvent: this.startTouchEvent,
+        lastEvent: this.latestTouchEvent,
+        scrollPending: this.scrollPending,
+        direction,
+        intent
       };
 
-      _this3.touchCb(result);
+      this.touchCb(result);
     });
   });
 
@@ -198,10 +191,7 @@ ScrollSwipe.prototype.touchFulfilled = function touchFulfilled(e, cb) {
     throw new Error('must provide callback to touchFulfilled');
   }
 
-  var touchSensitivity = this.touchSensitivity;
-  var touchArrX = this.touchArrX;
-  var touchArrY = this.touchArrY;
-
+  var { touchSensitivity, touchArrX, touchArrY } = this;
 
   var bool = touchArrX.length > touchSensitivity && touchArrY.length > touchSensitivity;
 
@@ -227,7 +217,7 @@ ScrollSwipe.prototype.touchFulfilled = function touchFulfilled(e, cb) {
     direction = HORIZONTAL;
   }
 
-  var intent = direction === VERTICAL ? yIntent : xIntent;
+  const intent = direction === VERTICAL ? yIntent : xIntent;
 
   swap.call(this, intent, direction);
   this.resetTouches();
@@ -283,23 +273,21 @@ ScrollSwipe.prototype.resetScroll = function resetScroll() {
   return this;
 };
 
+ScrollSwipe.prototype.flush = function flush() {
+  this.resetScroll();
+  this.resetTouches();
+  return this;
+};
+
 ScrollSwipe.prototype.scrollFulfilled = function scrollFulfilled(cb) {
   if (!cb) {
     throw new Error('must provide callback to scrollFulfilled');
   }
 
-  var xArr = this.xArr;
-  var yArr = this.yArr;
-  var scrollSensitivity = this.scrollSensitivity;
+  var { xArr, yArr, scrollSensitivity } = this;
 
-
-  var bool = xArr.length > scrollSensitivity && yArr.length > scrollSensitivity;
-
-  var _evalScrollDirection = this.evalScrollDirection();
-
-  var direction = _evalScrollDirection.direction;
-  var intent = _evalScrollDirection.intent;
-
+  const bool = xArr.length > scrollSensitivity && yArr.length > scrollSensitivity;
+  const { direction, intent } = this.evalScrollDirection();
 
   if (bool) {
     swap.call(this, intent, direction);
@@ -312,15 +300,9 @@ ScrollSwipe.prototype.scrollFulfilled = function scrollFulfilled(cb) {
 };
 
 ScrollSwipe.prototype.evalScrollDirection = function evalScrollDirection() {
-  var _getSums = this.getSums();
-
-  var x = _getSums.x;
-  var y = _getSums.y;
-  var xIntent = _getSums.xIntent;
-  var yIntent = _getSums.yIntent;
-
-  var direction = x > y ? HORIZONTAL : VERTICAL;
-  var base = direction === VERTICAL ? yIntent : xIntent;
+  const { x, y, xIntent, yIntent } = this.getSums();
+  const direction = x > y ? HORIZONTAL : VERTICAL;
+  const base = direction === VERTICAL ? yIntent : xIntent;
 
   var intent = 0;
 
@@ -328,28 +310,26 @@ ScrollSwipe.prototype.evalScrollDirection = function evalScrollDirection() {
     intent = 1;
   }
 
-  return { direction: direction, intent: intent };
+  return { direction, intent };
 };
 
 ScrollSwipe.prototype.getSums = function getSums() {
-  var xArr = this.xArr;
-  var yArr = this.yArr;
-
+  const { xArr, yArr } = this;
 
   var xIntent = 0;
   var yIntent = 0;
 
-  var x = xArr.reduce(function (result, curr) {
+  var x = xArr.reduce((result, curr) => {
     xIntent = xIntent + curr;
     return result += Math.abs(curr);
   }, 0);
 
-  var y = yArr.reduce(function (result, curr) {
+  var y = yArr.reduce((result, curr) => {
     yIntent = yIntent + curr;
     return result += Math.abs(curr);
   }, 0);
 
-  return { x: x, y: y, xIntent: xIntent, yIntent: yIntent };
+  return { x, y, xIntent, yIntent };
 };
 
 ScrollSwipe.prototype.getScrollDirection = function getScrollDirection() {

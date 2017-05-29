@@ -233,12 +233,20 @@ ScrollSwipe.prototype.getTouch = function getTouch(idx) {
 };
 
 ScrollSwipe.prototype.addXTouch = function addTouch(touch) {
+  if (this.pending()) {
+    return this;
+  }
+
   this.latestTouch = touch;
   this.touchArrX.push(touch);
   return this;
 };
 
 ScrollSwipe.prototype.addYTouch = function addTouch(touch) {
+  if (this.pending()) {
+    return this;
+  }
+
   this.latestTouch = touch;
   this.touchArrY.push(touch);
   return this;
@@ -252,12 +260,20 @@ ScrollSwipe.prototype.resetTouches = function resetTouches() {
 
 //wheel events
 ScrollSwipe.prototype.addXScroll = function addXScroll(s) {
+  if (this.pending()) {
+    return this;
+  }
+
   this.latestScroll = s;
   this.xArr.push(s);
   return this;
 };
 
 ScrollSwipe.prototype.addYScroll = function addYScroll(s) {
+  if (this.pending()) {
+    return this;
+  }
+
   this.latestScroll = s;
   this.yArr.push(s);
   return this;
@@ -334,6 +350,10 @@ ScrollSwipe.prototype.getSums = function getSums() {
 
 ScrollSwipe.prototype.getScrollDirection = function getScrollDirection() {
   return this.currentDirection;
+};
+
+ScrollSwipe.prototype.pending = function pending() {
+  return this.scrollPending;
 };
 
 function swap(intent, direction) {

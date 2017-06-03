@@ -66,6 +66,10 @@ function ScrollSwipe(opts) {
 
   this.scrollPending = false;
 
+  if (this.target.style) {
+    this.target.style.touchAction = 'none';
+  }
+
   //these should only init if true
   if (this.scrollCb) {
     this.initScroll();
@@ -142,7 +146,6 @@ ScrollSwipe.prototype.initScroll = function initScroll() {
 
 ScrollSwipe.prototype.initTouch = function initTouch() {
   this.target.addEventListener('touchmove', e => {
-
     if (this.touchPreventDefault) {
       e.preventDefault();
     }
@@ -157,10 +160,6 @@ ScrollSwipe.prototype.initTouch = function initTouch() {
   });
 
   this.target.addEventListener('touchend', e => {
-    if (this.touchPreventDefault) {
-      e.preventDefault();
-    }
-
     this.touchFulfilled(e, (fulfilled, direction, intent) => {
       if (!fulfilled) {
         return;

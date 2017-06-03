@@ -1,7 +1,7 @@
 var ScrollSwipe = require('../lib/ScrollSwipe'); //or just use the global window.ScrollDirect if using this on the client;
 
 var ss = new ScrollSwipe({
-	target: document, // can be a div, or anything else you want to track scroll/touch events on
+	target: document.body, // can be a div, or anything else you want to track scroll/touch events on
 	scrollSensitivity: 0, // the lower the number, the more sensitive
 	touchSensitivity: 0, // the lower the number, the more senitive,
 	scrollPreventDefault: true, // prevent default option for scroll events

@@ -92,99 +92,89 @@ ScrollSwipe.prototype.listen = function listen() {
   return this;
 };
 
-ScrollSwipe.prototype.killScroll = function killScroll() {
-  this.target.removeEventListener('wheel');
-  return this;
-};
-
-ScrollSwipe.prototype.killTouch = function killTouch() {
-  this.target.removeEventListener('touchmove');
-  this.target.removeEventListener('touchend');
-  return this;
-};
-
-ScrollSwipe.prototype.killAll = function teardown() {
-  this.killScroll().killTouch();
-  return this;
-};
-
-ScrollSwipe.prototype.initScroll = function initScroll() {
+ScrollSwipe.prototype.onWheel = function onWheel(e) {
   var _this2 = this;
 
-  this.target.addEventListener('wheel', function (e) {
-    if (_this2.scrollPreventDefault) {
-      e.preventDefault();
-    }
+  if (this.scrollPreventDefault) {
+    e.preventDefault();
+  }
 
-    if (_this2.scrollPending) {
+  if (this.scrollPending) {
+    return;
+  }
+
+  this.startScrollEvent = e;
+
+  var x = e.deltaX;
+  var y = e.deltaY;
+
+  this.addXScroll(x);
+  this.addYScroll(y);
+
+  this.scrollFulfilled(function (fulfilled, direction, intent) {
+    if (!fulfilled) {
       return;
     }
 
-    _this2.startScrollEvent = e;
+    _this2.latestScrollEvent = e;
 
-    var x = e.deltaX;
-    var y = e.deltaY;
+    var result = {
+      startEvent: e,
+      lastEvent: _this2.latestScrollEvent,
+      scrollPending: _this2.scrollPending,
+      direction: direction,
+      intent: intent
+    };
 
-    _this2.addXScroll(x);
-    _this2.addYScroll(y);
-
-    _this2.scrollFulfilled(function (fulfilled, direction, intent) {
-      if (!fulfilled) {
-        return;
-      }
-
-      _this2.latestScrollEvent = e;
-
-      var result = {
-        startEvent: e,
-        lastEvent: _this2.latestScrollEvent,
-        scrollPending: _this2.scrollPending,
-        direction: direction,
-        intent: intent
-      };
-
-      _this2.scrollCb(result);
-    });
+    _this2.scrollCb(result);
   });
+};
 
+ScrollSwipe.prototype.initScroll = function initScroll() {
+  this.newOnWheel = this.onWheel.bind(this);
+  this.target.addEventListener('wheel', this.newOnWheel, false);
   return this;
 };
 
-ScrollSwipe.prototype.initTouch = function initTouch() {
+ScrollSwipe.prototype.touchMove = function touchMove(e) {
+  if (this.touchPreventDefault) {
+    e.preventDefault();
+  }
+
+  var changedTouches = e.changedTouches[0];
+  var x = changedTouches.clientX;
+  var y = changedTouches.clientY;
+
+  this.startTouchEvent = e;
+  this.addXTouch(x);
+  this.addYTouch(y);
+};
+
+ScrollSwipe.prototype.touchEnd = function touchEnd(e) {
   var _this3 = this;
 
-  this.target.addEventListener('touchmove', function (e) {
-    if (_this3.touchPreventDefault) {
-      e.preventDefault();
+  this.touchFulfilled(e, function (fulfilled, direction, intent) {
+    if (!fulfilled) {
+      return;
     }
 
-    var changedTouches = e.changedTouches[0];
-    var x = changedTouches.clientX;
-    var y = changedTouches.clientY;
+    var result = {
+      startEvent: _this3.startTouchEvent,
+      lastEvent: _this3.latestTouchEvent,
+      scrollPending: _this3.scrollPending,
+      direction: direction,
+      intent: intent
+    };
 
-    _this3.startTouchEvent = e;
-    _this3.addXTouch(x);
-    _this3.addYTouch(y);
+    _this3.touchCb(result);
   });
+};
 
-  this.target.addEventListener('touchend', function (e) {
-    _this3.touchFulfilled(e, function (fulfilled, direction, intent) {
-      if (!fulfilled) {
-        return;
-      }
-
-      var result = {
-        startEvent: _this3.startTouchEvent,
-        lastEvent: _this3.latestTouchEvent,
-        scrollPending: _this3.scrollPending,
-        direction: direction,
-        intent: intent
-      };
-
-      _this3.touchCb(result);
-    });
-  });
-
+ScrollSwipe.prototype.initTouch = function initTouch() {
+  this.newTouchMove = this.touchMove.bind(this);
+  this.newTouchEnd = this.touchEnd.bind(this);
+  this.target.addEventListener('touchmove', this.newTouchMove, false);
+  this.target.addEventListener('touchend', this.newTouchEnd, false);
   return this;
 };
 
@@ -377,6 +367,22 @@ ScrollSwipe.prototype.getScrollDirection = function getScrollDirection() {
 
 ScrollSwipe.prototype.pending = function pending() {
   return this.scrollPending;
+};
+
+ScrollSwipe.prototype.killScroll = function killScroll() {
+  this.target.removeEventListener('wheel', this.newOnWheel, false);
+  return this;
+};
+
+ScrollSwipe.prototype.killTouch = function killTouch() {
+  this.target.removeEventListener('touchmove', this.newTouchMove, false);
+  this.target.removeEventListener('touchend', this.newTouchEnd, false);
+  return this;
+};
+
+ScrollSwipe.prototype.killAll = function teardown() {
+  this.killScroll().killTouch();
+  return this;
 };
 
 function swap(intent, direction) {

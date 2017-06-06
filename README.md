@@ -1,23 +1,23 @@
-#scroll-swipe :mouse2:
+# scroll-swipe :mouse2:
 
-####[NPM](https://www.npmjs.com/package/scroll-swipe)
+#### [NPM](https://www.npmjs.com/package/scroll-swipe)
 ```
 npm install scroll-swipe
 ```
 
-###easy-peasy 2-step API for providing scroll and touch event direction handlers
+### easy-peasy 2-step API for providing scroll and touch event direction handlers
 
-#####UMD-wrapped for use with node/browser and with or without bundlers
+##### UMD-wrapped for use with node/browser and with or without bundlers
 
-####Example setup can be found [here](https://github.com/cmswalker/scroll-swipe/blob/master/examples/index.js)
+#### Example setup can be found [here](https://github.com/cmswalker/scroll-swipe/blob/master/examples/index.js)
 
-#####Run the example locally:
+##### Run the example locally:
 ```
 npm install
 npm start => localhost:3333
 ```
 
-###Instantiate
+### Instantiate
 ```
 var ss = new ScrollSwipe({
 	target: document, // Element must be a single dom-node per ScrollSwipe Instance
@@ -30,9 +30,9 @@ var ss = new ScrollSwipe({
 });
 ```
 
-###Scroll API && Touch API
+### Scroll API && Touch API
 ```
-// Example callbacks for the ScrollSwipe instance above ^^
+//Example callbacks for the ScrollSwipe instance above ^^
 
 /**
  * @param  {Object} data - returns the following
@@ -42,18 +42,19 @@ var ss = new ScrollSwipe({
  * direction - 'VERTICAL' || 'HORIZONTAL' for mapping vertical/horizontal actions from the event;
  * intent - 0 || 1  for mapping up/down && left/right actions from the event
  */
+
 function scrollCb(data) {
-	//do animations, state changes/eval or something async, then open the listener back up.
+    //do animations, state changes/eval or something async, then open the listener back up.
 	ss.listen();
 }
 
 function touchCb(data) {
-  //the exact same behavior as scrollCb ^^ applies
-	ss.listen();
+    //the exact same behavior as scrollCb ^^ applies
+    ss.listen();
 }
 
-//kill scroll event listeners for an instance with ss.killScroll();
-//kill touch event listeners for an instance with ss.killTouch();
-//kill all event listeners for an instance with ss.killAll();
+// kill scroll event listeners for an instance with ss.killScroll();
+// kill touch event listeners for an instance with ss.killTouch();
+// kill all event listeners for an instance with ss.killAll();
 
 ```

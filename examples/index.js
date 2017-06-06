@@ -44,3 +44,13 @@ function touchCb(data) {
 	//perform actions such as animations/transitions or just plain funciton calls, then set the scrollPending back to false to listen for the next event
 	ss.listen();
 }
+
+var k = document.getElementById('kill');
+k.addEventListener('click', function(e) {	
+	killAll();
+});
+
+function killAll() {
+	//remove all event listeners
+	ss.killAll();
+}

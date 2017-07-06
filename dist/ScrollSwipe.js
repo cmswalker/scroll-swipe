@@ -70,10 +70,6 @@ function ScrollSwipe(opts) {
 
   this.scrollPending = false;
 
-  if (this.target.style) {
-    this.target.style.touchAction = 'none';
-  }
-
   //these should only init if true
   if (this.scrollCb) {
     this.initScroll();

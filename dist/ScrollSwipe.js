@@ -112,6 +112,7 @@ ScrollSwipe.prototype.onWheel = function onWheel(e) {
       return;
     }
 
+    _this2.lockout();
     _this2.latestScrollEvent = e;
 
     var result = {
@@ -123,6 +124,7 @@ ScrollSwipe.prototype.onWheel = function onWheel(e) {
     };
 
     _this2.scrollCb(result);
+    _this2.undoLockout();
   });
 };
 
@@ -235,6 +237,7 @@ ScrollSwipe.prototype.addXTouch = function addTouch(touch) {
 
   this.latestTouch = touch;
   this.touchArrX.push(touch);
+
   return this;
 };
 
@@ -245,6 +248,7 @@ ScrollSwipe.prototype.addYTouch = function addTouch(touch) {
 
   this.latestTouch = touch;
   this.touchArrY.push(touch);
+
   return this;
 };
 
@@ -282,12 +286,38 @@ ScrollSwipe.prototype.getDirection = function getDirection() {
 ScrollSwipe.prototype.resetScroll = function resetScroll() {
   this.xArr = [];
   this.yArr = [];
+
   return this;
 };
 
 ScrollSwipe.prototype.flush = function flush() {
   this.resetScroll();
   this.resetTouches();
+
+  return this;
+};
+
+ScrollSwipe.prototype.lockout = function lockout() {
+  this.originalAddXTouch = this.addXTouch;
+  this.originalAddYTouch = this.addYTouch;
+
+  this.originalAddXScroll = this.addXScroll;
+  this.originalAddYScroll = this.addYScroll;
+
+  this.addXScroll = function () {};
+  this.addYScroll = function () {};
+  this.addXTouch = function () {};
+  this.addYTouch = function () {};
+
+  return this;
+};
+
+ScrollSwipe.prototype.undoLockout = function undoLockout() {
+  this.addXScroll = this.originalAddXScroll;
+  this.addYScroll = this.originalAddYScroll;
+  this.addXTouch = this.originalAddXTouch;
+  this.addYTouch = this.originalAddYTouch;
+
   return this;
 };
 

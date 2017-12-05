@@ -46,7 +46,7 @@ function touchCb(data) {
 }
 
 var k = document.getElementById('kill');
-k.addEventListener('click', function(e) {	
+k.addEventListener('click', function(e) {
 	killAll();
 });
 

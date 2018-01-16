@@ -1,6 +1,6 @@
 {
   "name": "scroll-swipe",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "description": "lightweight vanilla JS library for detecting scroll and touch events based on custom sensitivity",
   "main": "./dist/ScrollSwipe.js",
   "eslintConfig": "./.eslint.json",

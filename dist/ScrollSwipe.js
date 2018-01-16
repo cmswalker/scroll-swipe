@@ -12,8 +12,6 @@
 var VERTICAL = 'VERTICAL';
 var HORIZONTAL = 'HORIZONTAL';
 
-var noOp = function noOp() {};
-
 var acceptedParams = {
   target: true,
   scrollSensitivity: true,
@@ -130,7 +128,11 @@ ScrollSwipe.prototype.onWheel = function onWheel(e) {
 
 ScrollSwipe.prototype.initScroll = function initScroll() {
   this.newOnWheel = this.onWheel.bind(this);
-  this.target.addEventListener('wheel', this.newOnWheel, false);
+
+  if (this.target && this.target.addEventListener) {
+    this.target.addEventListener('wheel', this.newOnWheel, false);
+  }
+
   return this;
 };
 
@@ -171,8 +173,12 @@ ScrollSwipe.prototype.touchEnd = function touchEnd(e) {
 ScrollSwipe.prototype.initTouch = function initTouch() {
   this.newTouchMove = this.touchMove.bind(this);
   this.newTouchEnd = this.touchEnd.bind(this);
-  this.target.addEventListener('touchmove', this.newTouchMove, false);
-  this.target.addEventListener('touchend', this.newTouchEnd, false);
+
+  if (this.target && this.target.addEventListener) {
+    this.target.addEventListener('touchmove', this.newTouchMove, false);
+    this.target.addEventListener('touchend', this.newTouchEnd, false);
+  }
+
   return this;
 };
 
@@ -396,13 +402,19 @@ ScrollSwipe.prototype.pending = function pending() {
 };
 
 ScrollSwipe.prototype.killScroll = function killScroll() {
-  this.target.removeEventListener('wheel', this.newOnWheel, false);
+  if (this.target && this.target.removeEventListener) {
+    this.target.removeEventListener('wheel', this.newOnWheel, false);
+  }
+
   return this;
 };
 
 ScrollSwipe.prototype.killTouch = function killTouch() {
-  this.target.removeEventListener('touchmove', this.newTouchMove, false);
-  this.target.removeEventListener('touchend', this.newTouchEnd, false);
+  if (this.target && this.target.removeEventListener) {
+    this.target.removeEventListener('touchmove', this.newTouchMove, false);
+    this.target.removeEventListener('touchend', this.newTouchEnd, false);
+  }
+
   return this;
 };
 

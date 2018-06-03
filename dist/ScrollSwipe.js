@@ -420,6 +420,7 @@ ScrollSwipe.prototype.killTouch = function killTouch() {
 
 ScrollSwipe.prototype.killAll = function teardown() {
   this.killScroll().killTouch();
+  this.flushAll();
   return this;
 };
 

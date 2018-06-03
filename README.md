@@ -1,24 +1,27 @@
 # scroll-swipe :mouse2:
 
 #### [NPM](https://www.npmjs.com/package/scroll-swipe)
-```
+
+```sh
 npm install scroll-swipe
 ```
 
-### easy-peasy 2-step API for providing scroll and touch event direction handlers
+### 2-step API for providing scroll and touch event direction handlers
 
 ##### UMD-wrapped for use with node/browser and with or without bundlers
 
 #### Example setup can be found [here](https://github.com/cmswalker/scroll-swipe/blob/master/examples/index.js)
 
-##### Run the example locally:
-```
+##### You can run the example locally:
+
+```sh
 npm install
 npm start => localhost:3333
 ```
 
 ### Instantiate
-```
+
+```js
 var ss = new ScrollSwipe({
 	target: document, // Element must be a single dom-node per ScrollSwipe Instance
 	scrollSensitivity: 0, // The lower the number, the more sensitive
@@ -31,7 +34,8 @@ var ss = new ScrollSwipe({
 ```
 
 ### Scroll API && Touch API
-```
+
+```js
 //Example callbacks for the ScrollSwipe instance above ^^
 
 /**

@@ -9,16 +9,14 @@
     "build": "babel lib -d dist && node build.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "repository": {
-    "type": "git"
-  },
-  "bugs": {
-    "url": "https://github.com/cmswalker/scroll-swipe"
-  },
   "author": "cmswalker",
   "license": "MIT",
-  "engines": {
-    "node": ">=4.4.3"
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cmswalker/scroll-swipe.git"
+  },
+  "bugs": {
+    "url": "https://github.com/cmswalker/scroll-swipe/issues"
   },
   "keywords": [
     "touch events",

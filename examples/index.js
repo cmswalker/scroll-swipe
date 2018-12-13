@@ -1,56 +1,65 @@
-var ScrollSwipe = require('../lib/ScrollSwipe'); //or just use the global window.ScrollDirect if using this on the client;
+const ScrollSwipe = require('../lib/ScrollSwipe'); //or just use the global window.ScrollDirect if using this on the client;
 
-var ss = new ScrollSwipe({
-	target: document.body, // can be a div, or anything else you want to track scroll/touch events on
-	scrollSensitivity: 0, // the lower the number, the more sensitive
-	touchSensitivity: 0, // the lower the number, the more senitive,
-	scrollPreventDefault: true, // prevent default option for scroll events
-	touchPreventDefault: true, // prevent default option for touch events
-	scrollCb: scrollCb,
-	touchCb: touchCb
-});
+function initializeExample() {
+	const ss = new ScrollSwipe({
+		target: document.body, // can be a div, or anything else you want to track scroll/touch events on
+		scrollSensitivity: 0, // the lower the number, the more sensitive
+		touchSensitivity: 0, // the lower the number, the more senitive,
+		scrollPreventDefault: true, // prevent default option for scroll events, manually handle scrolls with scrollCb
+		touchPreventDefault: true, // prevent default option for touch events, manually handle scrolls with touchCb
+		scrollCb,
+		touchCb
+	});
 
-var intentMap = {
-	'VERTICAL': {
-		0: 'UP',
-		1: 'DOWN'
-	},
-	'HORIZONTAL': {
-		0: 'LEFT',
-		1: 'RIGHT'
+	function scrollCb(data) {
+		const { direction, mappedIntent } = data;
+		console.log('scroll data', data);
+		console.log('the user scrolled ', direction);
+		console.log('with an intent of ', mappedIntent);
+
+		//perform actions such as animations/transitions or just plain funciton calls, then set the scrollPending back to false to listen for the next event
+		ss.listen();
 	}
-};
 
-/**
- * @param  {Object} data - returns the following
- * startEvent - Event that triggered this action
- * lastEvent - Last Event at the end of action
- * scrollPending - state of instance's scrollPending property (will always come back true after a successful event)
- * direction - 'VERTICAL' || 'HORIZONTAL' for mapping vertical/horizontal actions from the event;
- * intent - 0 || 1  for mapping up/down && left/right actions from the event
- */
-function scrollCb(data) {
-	console.log('scroll data', data);
-	console.log('the user scrolled ', data.direction);
-	console.log('with an intent of ', intentMap[data.direction][data.intent]);
+	function touchCb(data) {
+		console.log('touch data', data);
+		const { direction, mappedIntent } = data;
+		console.log('the user scrolled ', direction);
+		console.log('with an intent of ', mappedIntent);
 
-	//perform actions such as animations/transitions or just plain funciton calls, then set the scrollPending back to false to listen for the next event
-	ss.listen();
+		//perform actions such as animations/transitions or just plain funciton calls, then set the scrollPending back to false to listen for the next event
+		ss.listen();
+	}
+
+	const k = document.getElementById('kill');
+	k.addEventListener('click', function(e) {
+		//remove all event listeners
+		ss.killAll();
+	});
 }
 
-function touchCb(data) {
-	console.log('touch data', data);
+//////////////////// DEMO SETUP ///////////////////////////
 
-	//perform actions such as animations/transitions or just plain funciton calls, then set the scrollPending back to false to listen for the next event
-	ss.listen();
+function initializeExamplePage() {
+	document.body.height = 1000000;
+
+	for (let i = 0; i < 100; i++) {
+		const div = document.createElement('div');
+		div.style.height = '300px';
+		div.style.width = '100%';
+		div.style.backgroundColor = getRandomColor();
+		document.body.appendChild(div);
+	}
 }
 
-var k = document.getElementById('kill');
-k.addEventListener('click', function(e) {
-	killAll();
-});
+initializeExamplePage();
+initializeExample();
 
-function killAll() {
-	//remove all event listeners
-	ss.killAll();
+function getRandomColor() {
+	var letters = '0123456789ABCDEF';
+	var color = '#';
+	for (var i = 0; i < 6; i++) {
+		color += letters[Math.floor(Math.random() * 16)];
+	}
+	return color;
 }

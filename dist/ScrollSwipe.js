@@ -13,13 +13,13 @@ var VERTICAL = 'VERTICAL';
 var HORIZONTAL = 'HORIZONTAL';
 
 var acceptedParams = {
-  target: true,
-  scrollSensitivity: true,
-  touchSensitivity: true,
-  scrollCb: true,
-  touchCb: true,
-  scrollPreventDefault: true,
-  touchPreventDefault: true
+  target: 1,
+  scrollSensitivity: 1,
+  touchSensitivity: 1,
+  scrollCb: 1,
+  touchCb: 1,
+  scrollPreventDefault: 1,
+  touchPreventDefault: 1
 };
 
 if (typeof module !== 'undefined') {
@@ -50,6 +50,11 @@ function ScrollSwipe(opts) {
     this.touchSensitivity = 0;
   }
 
+  if (this.target.style || this.target.style.touchAction === '') {
+    this.target.style.touchAction += 'manipulation';
+  }
+
+  this.scrollPending = false;
   this.startTouchEvent = null;
   this.latestTouchEvent = null;
   this.latestTouch = null;
@@ -65,8 +70,16 @@ function ScrollSwipe(opts) {
   this.yArr = [];
   this.touchArrX = [];
   this.touchArrY = [];
-
-  this.scrollPending = false;
+  this.intentMap = {
+    'VERTICAL': {
+      0: 'UP',
+      1: 'DOWN'
+    },
+    'HORIZONTAL': {
+      0: 'LEFT',
+      1: 'RIGHT'
+    }
+  };
 
   //these should only init if true
   if (this.scrollCb) {
@@ -113,13 +126,12 @@ ScrollSwipe.prototype.onWheel = function onWheel(e) {
     _this2.lockout();
     _this2.latestScrollEvent = e;
 
-    var result = {
-      startEvent: e,
+    var result = _this2.buildResult({
+      startEvent: _this2.latestScrollEvent,
       lastEvent: _this2.latestScrollEvent,
-      scrollPending: _this2.scrollPending,
       direction: direction,
       intent: intent
-    };
+    });
 
     _this2.scrollCb(result);
     _this2.undoLockout();
@@ -150,6 +162,22 @@ ScrollSwipe.prototype.touchMove = function touchMove(e) {
   this.addYTouch(y);
 };
 
+ScrollSwipe.prototype.buildResult = function buildResult(_ref) {
+  var startEvent = _ref.startEvent,
+      lastEvent = _ref.lastEvent,
+      direction = _ref.direction,
+      intent = _ref.intent;
+
+  return {
+    startEvent: startEvent,
+    lastEvent: lastEvent,
+    direction: direction,
+    intent: intent,
+    scrollPending: this.scrollPending,
+    mappedIntent: this.intentMap[direction][intent]
+  };
+};
+
 ScrollSwipe.prototype.touchEnd = function touchEnd(e) {
   var _this3 = this;
 
@@ -158,13 +186,12 @@ ScrollSwipe.prototype.touchEnd = function touchEnd(e) {
       return;
     }
 
-    var result = {
+    var result = _this3.buildResult({
       startEvent: _this3.startTouchEvent,
       lastEvent: _this3.latestTouchEvent,
-      scrollPending: _this3.scrollPending,
       direction: direction,
       intent: intent
-    };
+    });
 
     _this3.touchCb(result);
   });
@@ -174,10 +201,8 @@ ScrollSwipe.prototype.initTouch = function initTouch() {
   this.newTouchMove = this.touchMove.bind(this);
   this.newTouchEnd = this.touchEnd.bind(this);
 
-  if (this.target && this.target.addEventListener) {
-    this.target.addEventListener('touchmove', this.newTouchMove, false);
-    this.target.addEventListener('touchend', this.newTouchEnd, false);
-  }
+  this.target.addEventListener('touchmove', this.newTouchMove, false);
+  this.target.addEventListener('touchend', this.newTouchEnd, false);
 
   return this;
 };
@@ -304,16 +329,18 @@ ScrollSwipe.prototype.flush = function flush() {
 };
 
 ScrollSwipe.prototype.lockout = function lockout() {
+  var noop = function noop() {};
+
   this.originalAddXTouch = this.addXTouch;
   this.originalAddYTouch = this.addYTouch;
 
   this.originalAddXScroll = this.addXScroll;
   this.originalAddYScroll = this.addYScroll;
 
-  this.addXScroll = function () {};
-  this.addYScroll = function () {};
-  this.addXTouch = function () {};
-  this.addYTouch = function () {};
+  this.addXScroll = noop;
+  this.addYScroll = noop;
+  this.addXTouch = noop;
+  this.addYTouch = noop;
 
   return this;
 };
@@ -335,7 +362,6 @@ ScrollSwipe.prototype.scrollFulfilled = function scrollFulfilled(cb) {
   var xArr = this.xArr,
       yArr = this.yArr,
       scrollSensitivity = this.scrollSensitivity;
-
 
   var bool = xArr.length > scrollSensitivity && yArr.length > scrollSensitivity;
 

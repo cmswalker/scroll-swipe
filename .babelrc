@@ -4,8 +4,8 @@
   "presets": [
     ["env", {
       "targets": {
-        "browsers": ["last 3 versions"],
-        "ie": 10
+        "browsers": ["last 2 versions"],
+        "ie": 11
       },
       "debug": true
     }]

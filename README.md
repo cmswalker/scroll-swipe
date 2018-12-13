@@ -47,13 +47,13 @@ var ss = new ScrollSwipe({
  * intent - 0 || 1  for mapping up/down && left/right actions from the event
  */
 
-function scrollCb(data) {
+function scrollCb({ direction, intent, lastEvent, scrollPending, startEvent }) {
     //do animations, state changes/eval or something async, then open the listener back up.
 	ss.listen();
 }
 
-function touchCb(data) {
-    //the exact same behavior as scrollCb ^^ applies
+function touchCb({ direction, intent, lastEvent, scrollPending, startEvent }) {
+    //do animations, state changes/eval or something async, then open the listener back up.
     ss.listen();
 }
 

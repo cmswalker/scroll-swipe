@@ -10,7 +10,7 @@ npm install scroll-swipe
 
 ##### UMD-wrapped for use with node/browser and with or without bundlers
 
-#### Example setup can be found [here](https://github.com/cmswalker/scroll-swipe/blob/master/examples/index.js)
+#### Example setup can be found [here](https://github.com/cmswalker/scroll-swipe/blob/main/examples/index.js)
 
 ##### You can run the example locally:
 

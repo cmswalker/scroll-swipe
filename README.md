@@ -22,14 +22,15 @@ npm start => localhost:3333
 ### Instantiate
 
 ```js
-var ss = new ScrollSwipe({
+const scrollSwipeManager = new ScrollSwipe({
 	target: document, // Element must be a single dom-node per ScrollSwipe Instance
-	scrollSensitivity: 0, // The lower the number, the more sensitive
-	touchSensitivity: 0, // The lower the number, the more senitive
-	scrollPreventDefault: true, // prevent default option for scroll events
-	touchPreventDefault: true, // prevent default option for touch events
+	scrollSensitivity: 0, // OPTIONAL: The lower the number, the more sensitive
+	touchSensitivity: 0, // OPTIONAL: The lower the number, the more sensitive
+	scrollPreventDefault: true, // OPTIONAL: prevent default option for scroll events, if you just want tracking data without changing UI, you don't need this
+	touchPreventDefault: true, // OPTIONAL: prevent default option for touch events, if you just want tracking data without changing UI, you don't need this
 	scrollCb: scrollCb,  // The action you wish to perform when a scroll reacts (details below)
 	touchCb: touchCb // The action you wish to perform when a touch reacts (details below)
+	addEventListenerOptions: {} // OPTIONAL: Native options to pass to listener: https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener#parameters
 });
 ```
 
@@ -47,12 +48,12 @@ var ss = new ScrollSwipe({
  * intent - 0 || 1  for mapping up/down && left/right actions from the event
  */
 
-function scrollCb({ direction, intent, lastEvent, scrollPending, startEvent }) {
+function scrollCb({ direction, intent, mappedIntent, lastEvent, scrollPending, startEvent }, ss) {
     //do animations, state changes/eval or something async, then open the listener back up.
 	ss.listen();
 }
 
-function touchCb({ direction, intent, lastEvent, scrollPending, startEvent }) {
+function touchCb({ direction, intent, mappedIntent, lastEvent, scrollPending, startEvent }, ss) {
     //do animations, state changes/eval or something async, then open the listener back up.
     ss.listen();
 }
@@ -60,5 +61,6 @@ function touchCb({ direction, intent, lastEvent, scrollPending, startEvent }) {
 // kill scroll event listeners for an instance with ss.killScroll();
 // kill touch event listeners for an instance with ss.killTouch();
 // kill all event listeners for an instance with ss.killAll();
+// re-initialze listeners with ss.init();
 
 ```

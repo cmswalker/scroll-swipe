@@ -11,16 +11,8 @@
 
 var VERTICAL = 'VERTICAL';
 var HORIZONTAL = 'HORIZONTAL';
-
-var acceptedParams = {
-  target: 1,
-  scrollSensitivity: 1,
-  touchSensitivity: 1,
-  scrollCb: 1,
-  touchCb: 1,
-  scrollPreventDefault: 1,
-  touchPreventDefault: 1
-};
+var acceptedParams = new Set(['target', 'scrollSensitivity', 'touchSensitivity', 'scrollCb', 'touchCb', 'scrollPreventDefault', 'touchPreventDefault', 'addEventListenerOptions']);
+var noop = function noop() {};
 
 if (typeof module !== 'undefined') {
   module.exports = ScrollSwipe;
@@ -30,7 +22,7 @@ function ScrollSwipe(opts) {
   var _this = this;
 
   Object.keys(opts).forEach(function (key) {
-    if (acceptedParams[key]) {
+    if (acceptedParams.has(key)) {
       _this[key] = opts[key];
       return;
     }
@@ -41,6 +33,9 @@ function ScrollSwipe(opts) {
   if (!opts.target) {
     throw new Error('must provide DOM target element to ScrollSwipe');
   }
+
+  // https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener#parameters
+  this.addEventListenerOptions = this.addEventListenerOptions || {};
 
   if (!this.scrollSensitivity || this.scrollSensitivity < 0) {
     this.scrollSensitivity = 0;
@@ -81,7 +76,13 @@ function ScrollSwipe(opts) {
     }
   };
 
-  //these should only init if true
+  this.init();
+
+  return this;
+}
+
+ScrollSwipe.prototype.init = function init() {
+  // only init if true
   if (this.scrollCb) {
     this.initScroll();
   }
@@ -91,7 +92,7 @@ function ScrollSwipe(opts) {
   }
 
   return this;
-}
+};
 
 ScrollSwipe.prototype.listen = function listen() {
   this.flush();
@@ -102,7 +103,7 @@ ScrollSwipe.prototype.listen = function listen() {
 ScrollSwipe.prototype.onWheel = function onWheel(e) {
   var _this2 = this;
 
-  if (this.scrollPreventDefault) {
+  if (this.scrollPreventDefault && !this.addEventListenerOptions.passive) {
     e.preventDefault();
   }
 
@@ -133,7 +134,7 @@ ScrollSwipe.prototype.onWheel = function onWheel(e) {
       intent: intent
     });
 
-    _this2.scrollCb(result);
+    _this2.scrollCb(result, _this2);
     _this2.undoLockout();
   });
 };
@@ -142,14 +143,14 @@ ScrollSwipe.prototype.initScroll = function initScroll() {
   this.newOnWheel = this.onWheel.bind(this);
 
   if (this.target && this.target.addEventListener) {
-    this.target.addEventListener('wheel', this.newOnWheel, false);
+    this.target.addEventListener('wheel', this.newOnWheel, this.addEventListenerOptions);
   }
 
   return this;
 };
 
 ScrollSwipe.prototype.touchMove = function touchMove(e) {
-  if (this.touchPreventDefault) {
+  if (this.touch && !this.addEventListenerOptions.passive) {
     e.preventDefault();
   }
 
@@ -193,7 +194,7 @@ ScrollSwipe.prototype.touchEnd = function touchEnd(e) {
       intent: intent
     });
 
-    _this3.touchCb(result);
+    _this3.touchCb(result, _this3);
   });
 };
 
@@ -201,8 +202,8 @@ ScrollSwipe.prototype.initTouch = function initTouch() {
   this.newTouchMove = this.touchMove.bind(this);
   this.newTouchEnd = this.touchEnd.bind(this);
 
-  this.target.addEventListener('touchmove', this.newTouchMove, false);
-  this.target.addEventListener('touchend', this.newTouchEnd, false);
+  this.target.addEventListener('touchmove', this.newTouchMove, this.addEventListenerOptions);
+  this.target.addEventListener('touchend', this.newTouchEnd, this.addEventListenerOptions);
 
   return this;
 };
@@ -329,8 +330,6 @@ ScrollSwipe.prototype.flush = function flush() {
 };
 
 ScrollSwipe.prototype.lockout = function lockout() {
-  var noop = function noop() {};
-
   this.originalAddXTouch = this.addXTouch;
   this.originalAddYTouch = this.addYTouch;
 
@@ -445,8 +444,7 @@ ScrollSwipe.prototype.killTouch = function killTouch() {
 };
 
 ScrollSwipe.prototype.killAll = function teardown() {
-  this.killScroll().killTouch();
-  this.flush();
+  this.killScroll().killTouch().flush();
   return this;
 };
 

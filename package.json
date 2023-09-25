@@ -44,5 +44,8 @@
     "gulp-umd": "^0.2.0",
     "webpack": "1.12.2",
     "webpack-dev-server": "^1.16.2"
+  },
+  "overrides": {
+    "graceful-fs": "^4.2.11"
   }
 }
